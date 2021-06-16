@@ -1,10 +1,12 @@
 import torch
 from torch.utils.data import DataLoader
-from .helper_scripts.datasets import MNIST
-from .helper_scripts.models import MLP
-from .helper_scripts.train import train
+from playground.helper_scripts.datasets import MNIST
+from playground.helper_scripts.models import MLP
+from playground.helper_scripts.train import train
 
 if __name__ == "__main__":
+    assert torch.cuda.is_available(), "Script requires a CUDA-cabable GPU to run, found none."
+
     trainset, _ = MNIST("./data")
     batch_size = 128
     trainloader = DataLoader(trainset, batch_size, shuffle=True, num_workers=8)

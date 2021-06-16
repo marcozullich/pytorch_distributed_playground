@@ -1,5 +1,3 @@
-import torch
-
 class AverageMeter(object):
     '''
     a generic class to keep track of performance metrics during training or testing of models
@@ -26,6 +24,7 @@ def accuracy(outputs, labels):
 
 
 def train(model, optimizer, loss_fn, num_epochs, dataloader, device, metric=accuracy):
+    model.to(device)
     model.train()
     for epoch in range(num_epochs):
         loss_meter = AverageMeter()

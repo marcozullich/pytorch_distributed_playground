@@ -1,4 +1,5 @@
 from torchvision.transforms import Compose, ToTensor, Normalize
+from torchvision import datasets
 import os
 
 def MNIST(data_root):
@@ -9,7 +10,7 @@ def MNIST(data_root):
         Normalize((0.1307,), (0.3081,))
     ])
 
-    trainset = MNIST(data_root, train=True, transform=transforms, download=True)
-    testset = MNIST(data_root, train=False, transform=transforms, download=True)
+    trainset = datasets.MNIST(data_root, train=True, transform=transforms, download=True)
+    testset = datasets.MNIST(data_root, train=False, transform=transforms, download=True)
 
     return trainset, testset
