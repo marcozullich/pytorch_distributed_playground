@@ -21,6 +21,7 @@ if __name__ == "__main__":
     # defaults values are
     # device_ids = list(range(torch.cuda.device_count()))
     # output_device = device_ids[0]
+    net.to("cuda:0")
 
     optimizer = torch.optim.Adam(net.parameters())
     loss_fn = torch.nn.CrossEntropyLoss()

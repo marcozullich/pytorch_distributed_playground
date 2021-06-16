@@ -6,7 +6,7 @@ from helper_scripts.train import train
 
 if __name__ == "__main__":
     assert torch.cuda.is_available(), "Script requires a CUDA-cabable GPU to run, found none."
-    
+
     trainset, _ = MNIST("./data")
     batch_size = 128
     trainloader = DataLoader(trainset, batch_size, shuffle=True, num_workers=8)
@@ -25,7 +25,8 @@ if __name__ == "__main__":
     loss_fn = torch.nn.CrossEntropyLoss()
 
     num_epochs = 3
-
+    
+    net.to("cuda:0")
     train(net, optimizer, loss_fn, num_epochs, trainloader, "cuda:0")
 
 
