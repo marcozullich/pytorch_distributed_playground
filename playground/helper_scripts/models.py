@@ -17,8 +17,9 @@ class MLP(nn.Module):
             nn.Linear(latent_dim, num_classes)
         )
     
-    def forward(self, data):
-        print(f"\t\tData shape in forward: {data.shape}")
+    def forward(self, data, print_shape=False):
+        if print_shape:
+            print(f"\t\tData shape in forward: {data.shape}")
         out = self.chunk1(data)
         out = self.chunk2(out)
         return out

@@ -30,7 +30,10 @@ def train(model, optimizer, loss_fn, num_epochs, dataloader, device, metric=accu
         loss_meter = AverageMeter()
         perf_meter = AverageMeter()
         for i, (data, labels) in enumerate(dataloader):
-            print(f"\tData shape in trainloader {data.shape}")
+            print_tensor_shapes = (epoch == 0 and i == 0)
+            if print_tensor_shapes:
+                print(f"\tData shape in trainloader {data.shape}")
+
             data = data.to(device)
             labels = labels.to(device)
 
@@ -38,7 +41,7 @@ def train(model, optimizer, loss_fn, num_epochs, dataloader, device, metric=accu
 
             optimizer.zero_grad()
 
-            outputs = model(data)
+            outputs = model(data, print_tensor_shapes)
 
             loss = loss_fn(outputs, labels)
             loss.backward()
