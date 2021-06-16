@@ -40,7 +40,7 @@ def train(model, optimizer, loss_fn, num_epochs, dataloader, data_device, metric
 
             optimizer.zero_grad()
 
-            outputs = model(data, print_tensor_shapes)
+            outputs = model(data, print_tensor_shapes).to(data_device)
 
             loss = loss_fn(outputs, labels)
             loss.backward()
