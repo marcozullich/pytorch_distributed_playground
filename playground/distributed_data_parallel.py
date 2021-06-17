@@ -8,9 +8,9 @@ from helper_scripts.train import train
 
 def prepare_train(gpu, args):
     rank = args.gpus * args.nr + gpu
-    torch.distirbuted.init_process_group(
+    torch.distributed.init_process_group(
         backend = "nccl",
-        init_method = "enc://",
+        init_method = "env://",
         world_size = args.world_size,
         rank = rank
     )
