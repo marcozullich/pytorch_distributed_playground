@@ -25,21 +25,23 @@ class MLPParallelPipelined(MLPParallel):
     def __init__(self, split_size=20, **kwargs):
         super().__init__(**kwargs)
         self.split_size = split_size
-        
+
     def forward(self, data, print_shape=False):
         if print_shape:
             print(f"\t\tData shape in forward: {data.shape}")
 
         splits = iter(data.split(self.split_size, dim=0))
         split = next(splits)
-
+        
         intermediate_eval = self.chunk1(split).to(self.devices[1])
         outputs = []
-
+        
         for split in splits:
             out = self.chunk2(intermediate_eval)
             outputs.append(out)
             intermediate_eval = self.chunk1(split).to(self.devices[1])
+        
+        outputs.append(self.chunk2(intermediate_eval))
 
         return torch.cat(outputs, dim=0)
 
