@@ -23,7 +23,7 @@ def accuracy(outputs, labels):
     return correct / labels.shape[0]
 
 
-def train(model, optimizer, loss_fn, num_epochs, dataloader, data_device, metric=accuracy):
+def train(model, optimizer, loss_fn, num_epochs, dataloader, data_device, metric=accuracy, cuda_non_blocking=False):
     model.train()
     for epoch in range(num_epochs):
         loss_meter = AverageMeter()
@@ -33,8 +33,8 @@ def train(model, optimizer, loss_fn, num_epochs, dataloader, data_device, metric
             if print_tensor_shapes:
                 print(f"\tData shape in trainloader {data.shape}")
 
-            data = data.to(data_device)
-            labels = labels.to(data_device)
+            data = data.to(data_device, non_blocking=cuda_non_blocking)
+            labels = labels.to(data_device, non_blocking=cuda_non_blocking)
 
             batch_size = data.shape[0]
 
