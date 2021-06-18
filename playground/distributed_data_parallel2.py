@@ -99,7 +99,7 @@ def _distributed_worker(
 
 
 def prepare_train(args):
-    print(f"Namespace {args}")
+    #print(f"Namespace {args}")
     device = f"cuda:{comm.get_local_rank()}"
     net = MLP().to(device)
     net = torch.nn.parallel.DistributedDataParallel(net, device_ids=[device], broadcast_buffers=False)
@@ -112,7 +112,7 @@ def prepare_train(args):
     # shuffle is False bc. DistributedSampler already shuffles
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=False, pin_memory=True, sampler=train_sampler)
 
-    distributed_train(net, optimizer, loss_fn, args.num_epochs, trainloader, device, cuda_non_blocking=True)
+    distributed_train(net, optimizer, loss_fn, args.epochs, trainloader, device, cuda_non_blocking=True)
 
 
 def distributed_train(model, optimizer, loss_fn, num_epochs, dataloader, data_device, metric=accuracy, cuda_non_blocking=False):
