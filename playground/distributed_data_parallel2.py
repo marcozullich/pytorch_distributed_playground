@@ -2,7 +2,6 @@
 from https://towardsdatascience.com/how-to-convert-a-pytorch-dataparallel-project-to-use-distributeddataparallel-b84632eed0f6
 '''
 
-from platform import dist
 import torch
 import os
 import argparse
