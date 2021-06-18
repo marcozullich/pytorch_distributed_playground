@@ -41,6 +41,7 @@ def launch(
             assert nodes == 1, f"dist_url='auto' not supported in multinode"
             port = _find_free_port()
             dist_url = f"tcp://127.0.0.1:{port}"
+            print(f"auto mode: dist_url is {dist_url}")
         if nodes > 1 and dist_url.startswith("file://"):
             logger = logging.getLogger(__name__)
             logger.warning("file:// is not a reliable init_method for multinode. Prefer tcp://")
@@ -94,7 +95,7 @@ def _distributed_worker(
         if i == rank:
             comm._LOCAL_PROCESS_GROUP = pg
 
-    main_func(*args)
+    main_func(args)
 
 
 def prepare_train(args):
@@ -171,6 +172,8 @@ if __name__ == "__main__":
             dist_url = f"tcp://127.0.0.1:{args.port}"
         else:
             dist_url = "auto"
+        
+    print(f"dist_url is {dist_url}")
 
     launch(prepare_train, args.gpus_per_node, nodes=args.nodes, rank=args.rank, dist_url=dist_url, args=args)
 
