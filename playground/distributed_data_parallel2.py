@@ -105,7 +105,7 @@ def prepare_train(args):
 
     loss_fn = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(net.parameters())
-    trainset, _ = MNIST()
+    trainset, _ = MNIST(data_root="data")
 
     train_sampler = torch.utils.data.distributed.DistributedSampler(trainset, shuffle=True)
     # shuffle is False bc. DistributedSampler already shuffles
