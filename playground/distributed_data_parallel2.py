@@ -150,8 +150,6 @@ def distributed_train(model, optimizer, loss_fn, num_epochs, dataloader, data_de
             print(f"### Epoch {epoch} || loss {total_loss} || performance {total_perf}")
 
 def meters_avg(meters):
-    print(f"meters type {type(meters)}")
-    print(f"meter** type {type(meters[0])}")
     meters_sum = sum([meter.sum for meter in meters])
     meters_n = sum([meter.count for meter in meters])
     return meters_sum / meters_n
