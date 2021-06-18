@@ -9,11 +9,12 @@ from helper_scripts.train import train
 def prepare_train(gpu, args):
     rank = args.gpus * args.nr + gpu
     torch.distributed.init_process_group(
-        backend = "nccl",
+        backend = "gloo",
         init_method = "env://",
         world_size = args.world_size,
         rank = rank
     )
+    print("Init'd")
 
     device = f"cuda:{gpu}"
     net = MLP().to(device)
