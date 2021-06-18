@@ -99,7 +99,7 @@ def _distributed_worker(
 
 
 def prepare_train(args):
-    #print(f"Namespace {args}")
+    print(f"Node {comm.get_rank()}")
     device = f"cuda:{comm.get_local_rank()}"
     net = MLP().to(device)
     net = torch.nn.parallel.DistributedDataParallel(net, device_ids=[device], broadcast_buffers=False)
@@ -161,15 +161,15 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--nodes', default=1, type=int, metavar='N')
     parser.add_argument('-g', '--gpus_per_node', default=1, type=int, help='number of gpus per node')
     parser.add_argument('-r', '--rank', default=0, type=int, help='ranking within the nodes')
-    parser.add_argument("-p", "--port", default=None, type=int, help="port to use for master process. Can be left to None when nodes=1 for auto-assignment")
+    parser.add_argument("-ip", "--ip", default=None, type=str, help="IP of master process. Can be left to None when nodes=1")
+    parser.add_argument("-p", "--port", default=None, type=int, help="port of master process. Can be left to None when nodes=1 for auto-assignment")
     parser.add_argument('--epochs', default=3, type=int, help='number of total epochs to run')
     parser.add_argument("--batch_size", default=128, type=int, help="batch size PER NODE for trainset")
     args = parser.parse_args()
 
     if args.nodes > 1:
-        assert args.port is not None, f"If nodes > 1, then --port cannot be None"
-        local_ip = socket.gethostbyname(socket.gethostname())
-        dist_url = f"tcp://{local_ip}:{args.port}"
+        assert args.ip is not None and args.port is not None, f"If nodes > 1, then --ip and --port cannot be None"
+        dist_url = f"tcp://{args.ip}:{args.port}"
     else:
         if args.port is not None:
             dist_url = f"tcp://127.0.0.1:{args.port}"
