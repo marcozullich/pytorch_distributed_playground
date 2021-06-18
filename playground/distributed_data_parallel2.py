@@ -99,6 +99,7 @@ def _distributed_worker(
 
 
 def prepare_train(args):
+    print(f"Namespace {args}")
     device = f"cuda:{comm.get_local_rank()}"
     net = MLP().to(device)
     net = torch.nn.parallel.DistributedDataParallel(net, device_ids=[device], broadcast_buffers=False)
