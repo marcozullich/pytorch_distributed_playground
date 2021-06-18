@@ -163,7 +163,7 @@ if __name__ == "__main__":
     parser.add_argument('-r', '--rank', default=0, type=int, help='ranking within the nodes')
     parser.add_argument("-p", "--port", default=None, type=int, help="port to use for master process. Can be left to None when nodes=1 for auto-assignment")
     parser.add_argument('--epochs', default=3, type=int, help='number of total epochs to run')
-    parser.add_argument("--batch_size", default=128, type=int, help="batch size for trainset")
+    parser.add_argument("--batch_size", default=128, type=int, help="batch size PER NODE for trainset")
     args = parser.parse_args()
 
     if args.nodes > 1:
@@ -177,6 +177,7 @@ if __name__ == "__main__":
             dist_url = "auto"
         
     print(f"dist_url is {dist_url}")
+
 
     launch(prepare_train, args.gpus_per_node, nodes=args.nodes, rank=args.rank, dist_url=dist_url, args=args)
 
