@@ -92,3 +92,18 @@ If you're unable to launch two concurrent interactive jobs on different nodes, o
   `python playground/distributed_data_parallel.py -n 2 -g 2 -nr 1 -ip <IP of first node>`
 
 Although, I'm sure there exist more elegant and efficient work-arounds 😛
+
+## References
+
+This repo is adapted from various docs and blog posts:
+
+**DataParallel**
+* https://pytorch.org/docs/stable/generated/torch.nn.DataParallel.html
+* https://pytorch.org/tutorials/beginner/blitz/data_parallel_tutorial.html
+  
+**DistributedDataParallel**
+* https://yangkky.github.io/2019/07/08/distributed-pytorch-tutorial.html
+* https://towardsdatascience.com/how-to-convert-a-pytorch-dataparallel-project-to-use-distributeddataparallel-b84632eed0f6
+  
+**Model parallelization**
+* https://pytorch.org/tutorials/intermediate/model_parallel_tutorial.html
