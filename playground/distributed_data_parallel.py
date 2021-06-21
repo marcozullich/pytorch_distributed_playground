@@ -9,7 +9,7 @@ from helper_scripts.train import train
 def prepare_train(gpu, args):
     rank = args.gpus * args.nr + gpu
     torch.distributed.init_process_group(
-        backend = "nccl",
+        backend = "gloo",
         init_method = "env://",
         world_size = args.world_size,
         rank = rank
@@ -21,13 +21,13 @@ def prepare_train(gpu, args):
 
     loss_fn = torch.nn.CrossEntropyLoss().to(device)
     optimizer = torch.optim.Adam(net.parameters())
-    trainset, _ = MNIST()
+    trainset, _ = MNIST("data")
 
-    train_sampler = torch.utils.data.distributed.DistributedSampler(trainset, num_replices=args.world_size, rank=rank)
+    train_sampler = torch.utils.data.distributed.DistributedSampler(trainset, num_replicas=args.world_size, rank=rank)
     # shuffle is False bc. DistributedSampler already shuffles
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=False, pin_memory=True, sampler=train_sampler)
 
-    train(net, optimizer, loss_fn, args.num_epochs, trainloader, device, cuda_non_blocking=True)
+    train(net, optimizer, loss_fn, args.epochs, trainloader, device, cuda_non_blocking=True)
 
 
 if __name__ == "__main__":
