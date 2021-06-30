@@ -112,10 +112,10 @@ def prepare_train(args):
     # shuffle is False bc. DistributedSampler already shuffles
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=False, pin_memory=True, sampler=train_sampler)
 
-    distributed_train(net, optimizer, loss_fn, args.epochs, trainloader, device, cuda_non_blocking=True)
+    distributed_train(net, optimizer, loss_fn, args.epochs, trainloader, device, cuda_non_blocking=True, checkpoint_save=args.savefile)
 
 
-def distributed_train(model, optimizer, loss_fn, num_epochs, dataloader, data_device, metric=accuracy, cuda_non_blocking=False):
+def distributed_train(model, optimizer, loss_fn, num_epochs, dataloader, data_device, metric=accuracy, cuda_non_blocking=False, checkpoint_save=None):
     model.train()
     for epoch in range(num_epochs):
         loss_meter = AverageMeter()
@@ -149,6 +149,15 @@ def distributed_train(model, optimizer, loss_fn, num_epochs, dataloader, data_de
         if comm.is_main_process():
             print(f"### Epoch {epoch} || loss {total_loss} || performance {total_perf}")
 
+            if checkpoint_save is not None:
+                torch.save({
+                    "epoch": epoch,
+                    "optimizer": optimizer.state_dict(),
+                    "parameters": model.state_dict()
+                }, checkpoint_save)
+
+
+
 def meters_avg(meters):
     if len(meters) > 0:
         meters_sum = sum([meter.sum for meter in meters])
@@ -165,6 +174,7 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--port", default=None, type=int, help="port of master process. Can be left to None when nodes=1 for auto-assignment")
     parser.add_argument('--epochs', default=3, type=int, help='number of total epochs to run')
     parser.add_argument("--batch_size", default=128, type=int, help="batch size PER NODE for trainset")
+    parser.add_argument("-s", "--savefile", default=None, type=str, help="location for storing checkpoints")
     args = parser.parse_args()
 
     if args.nodes > 1:
@@ -177,6 +187,9 @@ if __name__ == "__main__":
             dist_url = "auto"
         
     print(f"dist_url is {dist_url}")
+
+    if args.savefile is not None:
+        os.makedirs(os.path.basename(args.savefile), exist_ok=True)
 
 
     launch(prepare_train, args.gpus_per_node, nodes=args.nodes, rank=args.rank, dist_url=dist_url, args=args)

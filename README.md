@@ -75,6 +75,7 @@ In all these programs, we train a simple MultiLayer Perceptron (MLP) on MNIST fo
 * `distributed_data_parallel2.py` showcases how `DistributedDataParallel` can be enhanced by the FAIR package `detectron2` for handling the communications between the processes (also for the training metrics calculation). Run like before, but:
   * `-nr` becomes `-r`
   * there's an additional argument `--port`, the port number for the communication between processes (in the previous script it was `8888` by default)
+  * there's also the possibility to save a checkpoint of the model for each epoch, by specifying a path for this checkpoint with the `--savefile` (`-s`) argument.
 * `model_parallel.py` shows an implementation of the model parallel paradigm, both with and without pipelining. Run with the argument `--pipelined` if you want the use the batch pipelining.
 
 ### Practical notes for running `DistributedDataParallel` on multiple nodes of a cluster
